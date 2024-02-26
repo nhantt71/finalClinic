@@ -1,0 +1,120 @@
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+  <h2>Thống kê</h2>
+
+  <!-- Chọn chu kỳ hiển thị -->
+  <form action="http://127.0.0.1:8000/admin/stats/" method="GET">
+    <select name="period">
+      <option value="month" {% if period == 'month' %}selected{% endif %}>Tháng</option>
+      <option value="quarter" {% if period == 'quarter' %}selected{% endif %}>Quý</option>
+      <option value="year" {% if period == 'year' %}selected{% endif %}>Năm</option>
+    </select>
+    <button type="submit" onclick="app()">Xem thống kê</button>
+    <button id="resetBtn">Reset</button>
+  </form>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <div style="width: 80%; margin: auto;">
+      <canvas id="appointmentsChart"></canvas>
+  </div>
+  <div style="width: 80%; margin: auto;">
+      <canvas id="revenueChart"></canvas>
+  </div>
+
+  <script>
+    let labels1 = []
+    let values1 = []
+    let labels2 = []
+    let values2 = []
+
+    {% for a in appointments_data %}
+      {% if period == "month" %}
+        labels1.push('{{ a.month }}');
+        values1.push('{{ a.count }}');
+      {% elif period == "quarter" %}
+        labels1.push('{{ a.quarter }}');
+        values1.push('{{ a.count }}');
+      {% elif period == "year" %}
+        labels1.push('{{ a.year }}');
+        values1.push('{{ a.count }}');
+      {% endif %}
+    {% endfor %}
+
+    {% for a in revenue_data %}
+      {% if period == "month" %}
+        labels2.push('{{ a.month }}');
+        values2.push('{{ a.revenue|floatformat:3 }}');
+      {% elif period == "quarter" %}
+        labels2.push('{{ a.quarter }}');
+        values2.push('{{ a.revenue|floatformat:3 }}');
+      {% elif period == "year" %}
+        labels2.push('{{ a.year }}');
+        values2.push('{{ a.revenue|floatformat:3 }}');
+      {% endif %}
+    {% endfor %}
+
+    const app = () => {
+      const ctx1 = document.getElementById('appointmentsChart');
+      const ctx2 = document.getElementById('revenueChart');
+
+      new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: labels1,
+          datasets: [{
+            label: '# Số lượng bệnh nhân',
+            data: values1,
+            borderWidth: 1,
+            backgroundColor: [
+              'rgb(255, 99, 132)',
+            ]
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: labels2,
+          datasets: [{
+            label: '# Doanh thu',
+            data: values2,
+            borderWidth: 1,
+            backgroundColor: [
+              'rgb(54, 162, 235)',
+            ]
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      event.preventDefault();
+    }
+  </script>
+
+  <script>
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      // Xóa tất cả các query parameters trên URL
+      history.replaceState({}, document.title, window.location.pathname);
+
+      // Làm mới trang
+      location.reload();
+    });
+  </script>
+{% endblock %}
