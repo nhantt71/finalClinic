@@ -122,7 +122,7 @@ DATABASES = {
     }
 }
 
-MEDIA_ROOT = '%s/privateclinic/static/' % BASE_DIR
+MEDIA_ROOT = '%s/clinic/static/' % BASE_DIR
 
 
 # Password validation
