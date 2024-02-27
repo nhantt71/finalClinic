@@ -32,8 +32,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = '2151013063nhan@ou.edu.vn'  # Thay bằng địa chỉ email của bạn
-EMAIL_HOST_PASSWORD = 'Nhan712003@'  # Thay bằng mật khẩu email của bạn
+EMAIL_HOST_USER = ''  # Thay bằng địa chỉ email của bạn
+EMAIL_HOST_PASSWORD = ''  # Thay bằng mật khẩu email của bạn
 
 # Application definition
 
